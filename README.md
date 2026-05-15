@@ -4,6 +4,14 @@ Reservoir is a lightweight native macOS menu-bar monitor for AI usage limits. It
 
 The project is intentionally small and local-first: Swift, AppKit, SwiftUI, WebKit, and Foundation only.
 
+## Screenshots
+
+These screenshots use synthetic demo values. They do not show real account data.
+
+![Reservoir menu bar demo](assets/screenshots/menu-bar-demo.svg)
+
+![Reservoir popover demo](assets/screenshots/popover-demo.svg)
+
 ## What It Shows
 
 - Menu bar: compact current-session remaining values for both providers, for example `C 95%  A 100%`.
@@ -92,23 +100,6 @@ The installer:
 - Registers and opens the installed app.
 
 Reservoir is a menu-bar app. It does not show a Dock icon.
-
-## Share Without Apple Developer ID
-
-You can share the ZIP with trusted users, but macOS will treat it as an unsigned/ad-hoc signed app. This is suitable for trusted personal distribution, not a polished public notarized release.
-
-Recipient install steps:
-
-```sh
-mkdir -p "$HOME/Applications"
-ditto -x -k Reservoir.zip "$HOME/Applications"
-xattr -cr "$HOME/Applications/Reservoir.app"
-open "$HOME/Applications/Reservoir.app"
-```
-
-If blocked, right-click `Reservoir.app`, choose **Open**, then confirm. They may also need Privacy & Security -> **Open Anyway**.
-
-Important: run only `~/Applications/Reservoir.app`. Avoid launching copies from Downloads, `dist`, or `/Applications`.
 
 ## Repository Layout
 

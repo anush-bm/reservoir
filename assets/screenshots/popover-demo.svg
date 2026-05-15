@@ -1,0 +1,37 @@
+<svg width="900" height="620" viewBox="0 0 900 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="620" rx="24" fill="#111417"/>
+  <rect x="24" y="24" width="852" height="572" rx="20" fill="#171B1F"/>
+  <text x="56" y="76" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="28" font-weight="700">Reservoir</text>
+  <rect x="792" y="42" width="48" height="40" rx="10" fill="#2B3036"/>
+  <text x="807" y="68" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="19">↻</text>
+
+  <rect x="56" y="112" width="788" height="196" rx="16" fill="#202428"/>
+  <circle cx="90" cy="150" r="20" stroke="#30D158" stroke-width="4"/>
+  <text x="83" y="157" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="18" font-weight="700">C</text>
+  <text x="122" y="144" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="22" font-weight="700">Codex</text>
+  <text x="122" y="170" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="15">Connected</text>
+  <rect x="724" y="130" width="72" height="38" rx="10" fill="#343A40"/>
+  <text x="748" y="155" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="17">↗</text>
+  <text x="78" y="216" fill="#E9EDF2" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="16" font-weight="600">Current session</text>
+  <text x="744" y="216" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="16" font-weight="700">82% left</text>
+  <rect x="78" y="228" width="718" height="8" rx="4" fill="#3A4047"/>
+  <rect x="78" y="228" width="589" height="8" rx="4" fill="#30D158"/>
+  <text x="78" y="258" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14">Resets May 15, 2026 8:30 PM</text>
+  <text x="640" y="284" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14">Updated 2 min ago</text>
+
+  <rect x="56" y="332" width="788" height="196" rx="16" fill="#202428"/>
+  <circle cx="90" cy="370" r="20" stroke="#30D158" stroke-width="4"/>
+  <text x="83" y="377" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="18" font-weight="700">A</text>
+  <text x="122" y="364" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="22" font-weight="700">Claude</text>
+  <text x="122" y="390" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="15">Connected</text>
+  <rect x="724" y="350" width="72" height="38" rx="10" fill="#343A40"/>
+  <text x="748" y="375" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="17">↗</text>
+  <text x="78" y="436" fill="#E9EDF2" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="16" font-weight="600">Current session</text>
+  <text x="744" y="436" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="16" font-weight="700">91% left</text>
+  <rect x="78" y="448" width="718" height="8" rx="4" fill="#3A4047"/>
+  <rect x="78" y="448" width="653" height="8" rx="4" fill="#30D158"/>
+  <text x="78" y="478" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14">Resets May 15, 2026 10:30 PM</text>
+  <text x="640" y="504" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14">Updated 1 min ago</text>
+
+  <text x="56" y="568" fill="#7E8792" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14">Demo screenshot. Values and reset times are synthetic.</text>
+</svg>

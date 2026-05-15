@@ -1,0 +1,13 @@
+<svg width="900" height="180" viewBox="0 0 900 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="180" rx="18" fill="#101418"/>
+  <rect x="0" y="0" width="900" height="44" fill="#0B87B7"/>
+  <circle cx="32" cy="22" r="6" fill="#0A0A0A"/>
+  <text x="48" y="27" fill="#0A0A0A" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="18" font-weight="600">C 82%</text>
+  <circle cx="126" cy="22" r="6" fill="#0A0A0A"/>
+  <text x="142" y="27" fill="#0A0A0A" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="18" font-weight="600">A 91%</text>
+  <text x="24" y="96" fill="#F5F7FA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="28" font-weight="700">Menu bar glance</text>
+  <text x="24" y="129" fill="#A9B0BA" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="17">Current-session remaining for Codex and Claude, using demo values.</text>
+  <rect x="650" y="68" width="214" height="54" rx="12" fill="#1C2228"/>
+  <circle cx="678" cy="95" r="9" fill="#30D158"/>
+  <text x="696" y="101" fill="#E9EDF2" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="16" font-weight="600">Fresh local cache</text>
+</svg>
