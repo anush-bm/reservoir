@@ -11,7 +11,7 @@ final class MenuBarController {
 
     init(appState: AppState) {
         self.appState = appState
-        self.statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        self.statusItem = NSStatusBar.system.statusItem(withLength: 74)
         self.popover.behavior = .transient
         self.popover.contentSize = NSSize(width: 420, height: 520)
         self.popover.contentViewController = NSHostingController(rootView: DashboardView(appState: appState))
@@ -19,9 +19,10 @@ final class MenuBarController {
         if let button = statusItem.button {
             button.action = #selector(togglePopover(_:))
             button.target = self
-            button.imagePosition = .imageLeft
-            button.imageScaling = .scaleProportionallyDown
+            button.image = nil
+            button.imagePosition = .noImage
             button.title = ""
+            button.font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold)
             button.setAccessibilityLabel("Reservoir usage monitor")
         }
 
@@ -35,9 +36,11 @@ final class MenuBarController {
     func refreshStatusItem() {
         guard let button = statusItem.button else { return }
         let display = StatusIconRenderer.menuBarDisplay(for: appState.providers, snapshots: appState.snapshots)
-        button.image = display.image
+        button.image = nil
+        button.attributedTitle = NSAttributedString(string: "")
         button.title = display.title
         button.contentTintColor = display.color
+        statusItem.length = display.width
         button.toolTip = tooltip()
     }
 
@@ -75,15 +78,14 @@ final class MenuBarController {
 }
 
 enum StatusIconRenderer {
-    static func menuBarDisplay(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> (image: NSImage?, title: String, color: NSColor) {
-        let image = NSImage(systemSymbolName: "drop.fill", accessibilityDescription: "Reservoir")
-        image?.isTemplate = true
+    static func menuBarDisplay(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> (title: String, color: NSColor, width: CGFloat) {
         let items = menuBarLimits(for: providers, snapshots: snapshots)
-        let title = items.isEmpty ? "--%" : items.map(menuBarTitle).joined(separator: "  ")
+        let title = items.isEmpty ? "C-- A--" : items.map(menuBarTitle).joined(separator: " ")
         let color = items
             .map { $0.isStale ? UsageColor.gray : $0.limit.color }
             .min(by: colorRank) ?? .gray
-        return (image, title, nsColor(for: color))
+        let width = max(54, min(92, CGFloat(title.count * 7 + 14)))
+        return (title, nsColor(for: color), width)
     }
 
     static func image(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> NSImage {
@@ -165,7 +167,7 @@ enum StatusIconRenderer {
         let provider = providerAbbreviation(item.provider)
         let percent = item.limit.percentRemaining.map { "\($0)%" } ?? "--%"
         let stale = item.isStale ? "*" : ""
-        return "\(provider) \(percent)\(stale)"
+        return "\(provider)\(percent)\(stale)"
     }
 
     private static func providerAbbreviation(_ provider: ProviderDefinition) -> String {

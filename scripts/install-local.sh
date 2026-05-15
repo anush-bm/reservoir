@@ -35,4 +35,4 @@ if ! open "$APP_PATH"; then
 fi
 
 echo "Installed and opened $APP_PATH"
-echo "Reservoir is a menu-bar app. Look for its small C/A ring icon in the macOS menu bar, not the Dock."
+echo "Reservoir is a menu-bar app. Look for compact C/A usage text in the macOS menu bar, not the Dock."
