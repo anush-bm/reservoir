@@ -29,16 +29,6 @@ Provider labels:
 - `C`: Codex
 - `A`: Claude / Anthropic
 
-## Security Posture
-
-- No Electron.
-- No Playwright, Puppeteer, Chromium automation, browser extension, localhost receiver, backend, analytics SDK, telemetry, or crash-reporting SDK.
-- No API keys.
-- No third-party networking libraries.
-- Uses Apple frameworks only: AppKit, SwiftUI, WebKit, Foundation, Security-related platform APIs.
-- Stores only normalized local usage snapshots and refresh metadata.
-- Does not persist raw page HTML, cookies, auth headers, bearer tokens, query strings, or full network responses.
-
 Local state files:
 
 - `~/Library/Application Support/Reservoir/snapshots.json`
