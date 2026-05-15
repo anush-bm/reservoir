@@ -4,6 +4,12 @@ Reservoir is a lightweight native macOS menu-bar monitor for AI usage limits. It
 
 The project is intentionally small and local-first: Swift, AppKit, SwiftUI, WebKit, and Foundation only.
 
+## Project Description
+
+Reservoir is for people who run multiple AI coding assistants and want usage visibility without repeatedly opening provider dashboards. It sits quietly in the macOS menu bar, refreshes local usage snapshots on a conservative cadence, and shows the most useful number first: current-session capacity remaining.
+
+The goal is not to become a subscription manager or analytics backend. Reservoir is a local utility that answers a narrow question quickly: “how much AI coding capacity do I have left right now?”
+
 ## Screenshots
 
 These screenshots use synthetic demo values. They do not show real account data.
