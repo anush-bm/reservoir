@@ -97,6 +97,8 @@ The installer:
 
 Reservoir is a menu-bar app. It does not show a Dock icon.
 
+If the menu-bar item is hidden by macOS or a menu-bar manager, open Reservoir again from Finder, Spotlight, or `~/Applications/Reservoir.app`. The existing running app will bring up the dashboard window without starting a duplicate process.
+
 ## Repository Layout
 
 - `Sources/Reservoir`: macOS app, menu bar, popover, WebKit collector.
