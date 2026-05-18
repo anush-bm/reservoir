@@ -11,7 +11,7 @@ final class MenuBarController {
 
     init(appState: AppState) {
         self.appState = appState
-        self.statusItem = NSStatusBar.system.statusItem(withLength: 74)
+        self.statusItem = NSStatusBar.system.statusItem(withLength: 30)
         self.popover.behavior = .transient
         self.popover.contentSize = NSSize(width: 420, height: 520)
         self.popover.contentViewController = NSHostingController(rootView: DashboardView(appState: appState))
@@ -19,10 +19,9 @@ final class MenuBarController {
         if let button = statusItem.button {
             button.action = #selector(togglePopover(_:))
             button.target = self
-            button.image = nil
-            button.imagePosition = .noImage
+            button.imagePosition = .imageOnly
+            button.imageScaling = .scaleNone
             button.title = ""
-            button.font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold)
             button.setAccessibilityLabel("Reservoir usage monitor")
         }
 
@@ -36,10 +35,10 @@ final class MenuBarController {
     func refreshStatusItem() {
         guard let button = statusItem.button else { return }
         let display = StatusIconRenderer.menuBarDisplay(for: appState.providers, snapshots: appState.snapshots)
-        button.image = nil
+        button.image = display.image
         button.attributedTitle = NSAttributedString(string: "")
-        button.title = display.title
-        button.contentTintColor = display.color
+        button.title = ""
+        button.contentTintColor = nil
         statusItem.length = display.width
         button.toolTip = tooltip()
     }
@@ -88,71 +87,41 @@ final class MenuBarController {
 }
 
 enum StatusIconRenderer {
-    static func menuBarDisplay(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> (title: String, color: NSColor, width: CGFloat) {
+    static func menuBarDisplay(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> (image: NSImage, width: CGFloat) {
         let items = menuBarLimits(for: providers, snapshots: snapshots)
-        let title = items.isEmpty ? "C-- A--" : items.map(menuBarTitle).joined(separator: " ")
-        let color = items
-            .map { $0.isStale ? UsageColor.gray : $0.limit.color }
-            .min(by: colorRank) ?? .gray
-        let width = max(54, min(92, CGFloat(title.count * 7 + 14)))
-        return (title, nsColor(for: color), width)
+        let worst = items.min { lhs, rhs in
+            (lhs.limit.percentRemaining ?? 101) < (rhs.limit.percentRemaining ?? 101)
+        }
+        let percent = worst?.limit.percentRemaining
+        let color = worst.map { $0.isStale ? UsageColor.gray : $0.limit.color } ?? .gray
+        return (compactPercentImage(percent: percent, color: color), 30)
     }
 
-    static func image(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> NSImage {
-        let size = NSSize(width: 54, height: 20)
+    private static func compactPercentImage(percent: Int?, color: UsageColor) -> NSImage {
+        let size = NSSize(width: 26, height: 18)
         let image = NSImage(size: size)
         image.lockFocus()
-        NSColor(calibratedRed: 0.02, green: 0.48, blue: 0.68, alpha: 1).setFill()
-        NSRect(origin: .zero, size: size).fill()
-
-        drawReservoirMark(in: NSRect(x: 7, y: 3, width: 14, height: 14))
-        drawPercentText(percentText(for: providers, snapshots: snapshots), at: NSPoint(x: 25, y: 4))
+        nsColor(for: color).setFill()
+        NSBezierPath(roundedRect: NSRect(x: 0, y: 1, width: size.width, height: 16), xRadius: 4, yRadius: 4).fill()
+        drawPercentText(percent.map { "\($0)" } ?? "--", in: NSRect(x: 0, y: 3, width: size.width, height: 12))
 
         image.unlockFocus()
         image.isTemplate = false
         return image
     }
 
-    private static func drawReservoirMark(in rect: NSRect) {
-        NSColor(calibratedWhite: 0.68, alpha: 1).setFill()
-        let drop = NSBezierPath()
-        drop.move(to: NSPoint(x: rect.midX, y: rect.maxY))
-        drop.curve(
-            to: NSPoint(x: rect.maxX, y: rect.midY - 1),
-            controlPoint1: NSPoint(x: rect.midX + 5, y: rect.maxY - 5),
-            controlPoint2: NSPoint(x: rect.maxX, y: rect.midY + 4)
-        )
-        drop.curve(
-            to: NSPoint(x: rect.midX, y: rect.minY),
-            controlPoint1: NSPoint(x: rect.maxX, y: rect.minY + 3),
-            controlPoint2: NSPoint(x: rect.midX + 4, y: rect.minY)
-        )
-        drop.curve(
-            to: NSPoint(x: rect.minX, y: rect.midY - 1),
-            controlPoint1: NSPoint(x: rect.midX - 4, y: rect.minY),
-            controlPoint2: NSPoint(x: rect.minX, y: rect.minY + 3)
-        )
-        drop.curve(
-            to: NSPoint(x: rect.midX, y: rect.maxY),
-            controlPoint1: NSPoint(x: rect.minX, y: rect.midY + 4),
-            controlPoint2: NSPoint(x: rect.midX - 5, y: rect.maxY - 5)
-        )
-        drop.close()
-        drop.fill()
-    }
-
-    private static func drawPercentText(_ label: String, at point: NSPoint) {
+    private static func drawPercentText(_ label: String, in rect: NSRect) {
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .bold),
+            .font: NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .bold),
             .foregroundColor: NSColor.white
         ]
-        label.draw(at: point, withAttributes: attributes)
-    }
-
-    private static func percentText(for providers: [ProviderDefinition], snapshots: [ProviderID: ProviderSnapshot]) -> String {
-        let items = menuBarLimits(for: providers, snapshots: snapshots)
-        guard !items.isEmpty else { return "--%" }
-        return items.map { "\($0.limit.percentRemaining ?? 0)%" }.joined(separator: " ")
+        let text = NSString(string: label)
+        let textSize = text.size(withAttributes: attributes)
+        let point = NSPoint(
+            x: rect.midX - textSize.width / 2,
+            y: rect.midY - textSize.height / 2
+        )
+        text.draw(at: point, withAttributes: attributes)
     }
 
     static func worstColor(in snapshot: ProviderSnapshot?) -> UsageColor {
@@ -170,20 +139,6 @@ enum StatusIconRenderer {
                 }
             guard let limit else { return nil }
             return MenuBarLimit(provider: provider, limit: limit, isStale: snapshot.isStale)
-        }
-    }
-
-    private static func menuBarTitle(for item: MenuBarLimit) -> String {
-        let provider = providerAbbreviation(item.provider)
-        let percent = item.limit.percentRemaining.map { "\($0)%" } ?? "--%"
-        let stale = item.isStale ? "*" : ""
-        return "\(provider)\(percent)\(stale)"
-    }
-
-    private static func providerAbbreviation(_ provider: ProviderDefinition) -> String {
-        switch provider.id {
-        case .codex: return "C"
-        case .claude: return "A"
         }
     }
 
