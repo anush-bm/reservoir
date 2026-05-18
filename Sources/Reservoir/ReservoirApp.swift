@@ -19,11 +19,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBarController: MenuBarController?
     private var dashboardWindowController: DashboardWindowController?
     private let singleInstance = SingleInstanceLock(name: "local.reservoir.single-instance")
-    private let showDashboardNotification = Notification.Name("local.reservoir.show-dashboard")
+    private let showReservoirNotification = Notification.Name("local.reservoir.show")
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         guard singleInstance.acquire() else {
-            DistributedNotificationCenter.default().post(name: showDashboardNotification, object: nil)
+            DistributedNotificationCenter.default().post(name: showReservoirNotification, object: nil)
             NSApp.terminate(nil)
             return
         }
@@ -31,8 +31,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.accessory)
         DistributedNotificationCenter.default().addObserver(
             self,
-            selector: #selector(showDashboardFromNotification),
-            name: showDashboardNotification,
+            selector: #selector(showReservoirFromNotification),
+            name: showReservoirNotification,
             object: nil
         )
         menuBarController = MenuBarController(appState: appState)
@@ -40,7 +40,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.menuBarController?.refreshStatusItem()
         }
         appState.start()
-        showDashboardWindow()
+        showReservoir()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -50,12 +50,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        showDashboardWindow()
+        showReservoir()
         return true
     }
 
-    @objc private func showDashboardFromNotification() {
-        showDashboardWindow()
+    @objc private func showReservoirFromNotification() {
+        showReservoir()
+    }
+
+    private func showReservoir() {
+        if menuBarController?.showPopover() != true {
+            showDashboardWindow()
+        }
     }
 
     private func showDashboardWindow() {

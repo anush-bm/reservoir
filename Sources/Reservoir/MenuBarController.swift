@@ -44,13 +44,23 @@ final class MenuBarController {
         button.toolTip = tooltip()
     }
 
+    func showPopover() -> Bool {
+        refreshStatusItem()
+        guard let button = statusItem.button else { return false }
+        if popover.isShown {
+            return true
+        }
+        appState.foregroundWindowOpen = true
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        NSApp.activate(ignoringOtherApps: true)
+        return true
+    }
+
     @objc private func togglePopover(_ sender: NSStatusBarButton) {
         if popover.isShown {
             closePopover()
         } else {
-            appState.foregroundWindowOpen = true
-            popover.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
-            NSApp.activate(ignoringOtherApps: true)
+            _ = showPopover()
         }
     }
 
