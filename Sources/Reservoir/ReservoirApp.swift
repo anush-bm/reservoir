@@ -18,6 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let appState = AppState()
     private var menuBarController: MenuBarController?
     private var dashboardWindowController: DashboardWindowController?
+    private var floatingBadgeController: FloatingBadgeWindowController?
     private let singleInstance = SingleInstanceLock(name: "local.reservoir.single-instance")
     private let showReservoirNotification = Notification.Name("local.reservoir.show")
 
@@ -36,10 +37,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
         menuBarController = MenuBarController(appState: appState)
+        floatingBadgeController = FloatingBadgeWindowController(appState: appState) { [weak self] in
+            self?.showReservoir()
+        }
         appState.onSnapshotsChanged = { [weak self] in
             self?.menuBarController?.refreshStatusItem()
+            self?.floatingBadgeController?.update()
         }
         appState.start()
+        floatingBadgeController?.show()
         showReservoir()
     }
 
@@ -69,6 +75,72 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             dashboardWindowController = DashboardWindowController(appState: appState)
         }
         dashboardWindowController?.show()
+    }
+}
+
+@MainActor
+final class FloatingBadgeWindowController: NSObject {
+    private let appState: AppState
+    private let onClick: () -> Void
+    private let panel: NSPanel
+    private let button = NSButton()
+
+    init(appState: AppState, onClick: @escaping () -> Void) {
+        self.appState = appState
+        self.onClick = onClick
+        self.panel = NSPanel(
+            contentRect: NSRect(x: 0, y: 0, width: 30, height: 22),
+            styleMask: [.borderless],
+            backing: .buffered,
+            defer: false
+        )
+        super.init()
+
+        panel.backgroundColor = .clear
+        panel.isOpaque = false
+        panel.hasShadow = true
+        panel.hidesOnDeactivate = false
+        panel.level = .statusBar
+        panel.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+        panel.isReleasedWhenClosed = false
+
+        button.frame = NSRect(x: 0, y: 0, width: 30, height: 22)
+        button.bezelStyle = .shadowlessSquare
+        button.isBordered = false
+        button.imagePosition = .imageOnly
+        button.imageScaling = .scaleNone
+        button.target = self
+        button.action = #selector(openReservoir)
+        button.setAccessibilityLabel("Reservoir usage monitor")
+        panel.contentView = button
+
+        update()
+        position()
+    }
+
+    func show() {
+        update()
+        position()
+        panel.orderFrontRegardless()
+    }
+
+    func update() {
+        let display = StatusIconRenderer.menuBarDisplay(for: appState.providers, snapshots: appState.snapshots)
+        button.image = display.image
+        button.toolTip = "Reservoir"
+    }
+
+    @objc private func openReservoir() {
+        onClick()
+    }
+
+    private func position() {
+        guard let screen = NSScreen.main else { return }
+        let frame = screen.frame
+        let size = panel.frame.size
+        let x = frame.maxX - size.width - 12
+        let y = frame.maxY - size.height - 4
+        panel.setFrameOrigin(NSPoint(x: x, y: y))
     }
 }
 
