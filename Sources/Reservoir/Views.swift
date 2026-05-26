@@ -205,6 +205,8 @@ struct SettingsView: View {
             Button("Clear browser session") {
                 appState.clearBrowserSession()
             }
+            Toggle("Show Dock Buddy", isOn: $appState.showDockBuddy)
+                .toggleStyle(.switch)
 
             Divider()
 

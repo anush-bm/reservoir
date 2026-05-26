@@ -22,6 +22,7 @@ These screenshots use synthetic demo values. They do not show real account data.
 
 - Menu bar: compact current-session remaining values for both providers, for example `C 95%  A 100%`.
 - Popover: provider cards with current session, weekly usage, colored progress bars, reset date/time, last updated, refresh, connect, disconnect, and browser-open actions.
+- Optional Dock Buddy: a small local-only status character that walks along the detected Dock edge when enabled in Settings.
 - Stale indicator: `*` after a menu-bar value means Reservoir is showing cached data after a failed refresh.
 
 Provider labels:
@@ -98,6 +99,8 @@ The installer:
 Reservoir is a menu-bar app. It does not show a Dock icon.
 
 If the menu-bar item is hidden by macOS or a menu-bar manager, open Reservoir again from Finder, Spotlight, or `~/Applications/Reservoir.app`. The existing running app will bring up the dashboard window without starting a duplicate process.
+
+The optional Dock Buddy is off by default. Enable it from Reservoir Settings with **Show Dock Buddy**. It uses a tiny floating AppKit panel near the Dock edge and never modifies, embeds into, or controls the real macOS Dock.
 
 ## Repository Layout
 

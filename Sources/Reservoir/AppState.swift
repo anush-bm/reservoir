@@ -11,8 +11,15 @@ final class AppState: ObservableObject {
     @Published var foregroundWindowOpen = false {
         didSet { restartTimer() }
     }
+    @Published var showDockBuddy: Bool {
+        didSet {
+            UserDefaults.standard.set(showDockBuddy, forKey: Self.showDockBuddyKey)
+            onPreferencesChanged?()
+        }
+    }
 
     var onSnapshotsChanged: (() -> Void)?
+    var onPreferencesChanged: (() -> Void)?
 
     private let registry = ProviderRegistry()
     private let logger = SecureLog()
@@ -23,6 +30,11 @@ final class AppState: ObservableObject {
     private var timerTask: Task<Void, Never>?
     private var connectWindows: [ProviderID: ConnectWindowController] = [:]
     private var scheduledRefreshEnabled = false
+    private static let showDockBuddyKey = "showDockBuddy"
+
+    init() {
+        self.showDockBuddy = UserDefaults.standard.bool(forKey: Self.showDockBuddyKey)
+    }
 
     var providers: [ProviderDefinition] {
         registry.providers

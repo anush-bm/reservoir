@@ -18,6 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let appState = AppState()
     private var menuBarController: MenuBarController?
     private var dashboardWindowController: DashboardWindowController?
+    private var statusBuddyController: StatusBuddyController?
     private let singleInstance = SingleInstanceLock(name: "local.reservoir.single-instance")
     private let showReservoirNotification = Notification.Name("local.reservoir.show")
 
@@ -36,10 +37,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
         menuBarController = MenuBarController(appState: appState)
+        statusBuddyController = StatusBuddyController(appState: appState) { [weak self] in
+            self?.showReservoir()
+        }
         appState.onSnapshotsChanged = { [weak self] in
             self?.menuBarController?.refreshStatusItem()
+            self?.statusBuddyController?.sync()
+        }
+        appState.onPreferencesChanged = { [weak self] in
+            self?.statusBuddyController?.sync()
         }
         appState.start()
+        statusBuddyController?.sync()
         showReservoir()
     }
 
