@@ -16,7 +16,7 @@ final class StatusBuddyController {
         self.appState = appState
         self.onClick = onClick
         self.panel = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 76, height: 96),
+            contentRect: NSRect(x: 0, y: 0, width: 88, height: 112),
             styleMask: [.borderless],
             backing: .buffered,
             defer: false
@@ -223,10 +223,10 @@ struct StatusBuddyView: View {
         Button(action: onClick) {
             ZStack {
                 speechBubble
-                    .offset(y: -34)
+                    .offset(y: -38)
                 character
             }
-            .frame(width: 76, height: 96)
+            .frame(width: 88, height: 112)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -237,65 +237,79 @@ struct StatusBuddyView: View {
         Text(model.percentText)
             .font(.system(size: 11, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
-            .frame(width: 34, height: 22)
+            .frame(width: 42, height: 26)
             .background(Color(nsColor: model.color))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 10)
                     .stroke(.white.opacity(0.85), lineWidth: 1)
             )
+            .shadow(color: .black.opacity(0.22), radius: 2, x: 0, y: 1)
             .opacity(model.isStale ? 0.72 : 1)
     }
 
     private var character: some View {
         let bob = model.isTired ? sin(model.phase) * 1.5 : sin(model.phase) * 3.5
-        let foot = sin(model.phase) * (model.isTired ? 2.0 : 5.0)
+        let foot = sin(model.phase) * (model.isTired ? 1.5 : 4.0)
 
         return ZStack {
             Capsule()
-                .fill(Color(nsColor: model.color).opacity(model.isStale ? 0.45 : 0.9))
-                .frame(width: 34, height: 42)
-                .offset(y: 4 + bob)
+                .fill(Color(nsColor: model.color).opacity(model.isStale ? 0.45 : 0.96))
+                .frame(width: 38, height: 56)
+                .overlay(
+                    Capsule()
+                        .stroke(.white.opacity(0.18), lineWidth: 1)
+                )
+                .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                .offset(y: 10 + bob)
 
             Circle()
                 .fill(Color.white.opacity(model.isStale ? 0.55 : 0.95))
-                .frame(width: 24, height: 24)
-                .offset(y: -20 + bob)
+                .frame(width: 31, height: 28)
+                .offset(y: -18 + bob)
 
             HStack(spacing: 5) {
-                Circle().fill(.black.opacity(0.75)).frame(width: 3, height: 3)
-                Circle().fill(.black.opacity(0.75)).frame(width: 3, height: 3)
+                Circle().fill(.black.opacity(0.72)).frame(width: 4, height: 4)
+                Circle().fill(.black.opacity(0.72)).frame(width: 4, height: 4)
             }
-            .offset(y: -22 + bob)
+            .offset(y: -20 + bob)
 
             Capsule()
                 .fill(Color.black.opacity(0.85))
-                .frame(width: 22, height: 8)
-                .offset(y: -34 + bob)
+                .frame(width: 23, height: 9)
+                .offset(y: -35 + bob)
 
-            HStack(spacing: 8) {
+            HStack(spacing: 12) {
                 Capsule()
-                    .fill(Color(nsColor: model.color).opacity(0.85))
-                    .frame(width: 7, height: 25)
-                    .rotationEffect(.degrees(model.facingRight ? -10 : 10))
+                    .fill(Color(nsColor: model.color).opacity(model.isStale ? 0.35 : 0.78))
+                    .frame(width: 10, height: 35)
+                    .overlay(
+                        Capsule()
+                            .stroke(.white.opacity(0.08), lineWidth: 1)
+                    )
+                    .rotationEffect(.degrees(model.facingRight ? -7 : 7))
                 Capsule()
-                    .fill(Color(nsColor: model.color).opacity(0.85))
-                    .frame(width: 7, height: 25)
-                    .rotationEffect(.degrees(model.facingRight ? 10 : -10))
+                    .fill(Color(nsColor: model.color).opacity(model.isStale ? 0.35 : 0.78))
+                    .frame(width: 10, height: 35)
+                    .overlay(
+                        Capsule()
+                            .stroke(.white.opacity(0.08), lineWidth: 1)
+                    )
+                    .rotationEffect(.degrees(model.facingRight ? 7 : -7))
             }
-            .offset(y: 6 + bob)
+            .offset(y: 15 + bob)
 
             HStack(spacing: 10) {
                 Capsule()
                     .fill(Color.black.opacity(0.85))
-                    .frame(width: 11, height: 7)
+                    .frame(width: 13, height: 7)
                     .offset(y: foot)
                 Capsule()
                     .fill(Color.black.opacity(0.85))
-                    .frame(width: 11, height: 7)
+                    .frame(width: 13, height: 7)
                     .offset(y: -foot)
             }
-            .offset(y: 30)
+            .offset(y: 40)
         }
         .scaleEffect(x: model.facingRight ? 1 : -1, y: 1)
         .animation(.linear(duration: 0.05), value: model.phase)
