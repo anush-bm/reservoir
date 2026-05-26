@@ -100,7 +100,7 @@ Reservoir is a menu-bar app. It does not show a Dock icon.
 
 If the menu-bar item is hidden by macOS or a menu-bar manager, open Reservoir again from Finder, Spotlight, or `~/Applications/Reservoir.app`. The existing running app will bring up the dashboard window without starting a duplicate process.
 
-The optional Dock Buddy is off by default. Enable it from Reservoir Settings with **Show Dock Buddy**. It uses a tiny floating AppKit panel near the Dock edge and never modifies, embeds into, or controls the real macOS Dock.
+The optional Dock Buddy is off by default. Open Reservoir and click the gear button, then enable **Show Dock Buddy**. It uses a tiny floating AppKit panel near the Dock edge and never modifies, embeds into, or controls the real macOS Dock.
 
 ## Repository Layout
 

@@ -3,10 +3,50 @@ import UsageMonitorCore
 
 struct DashboardView: View {
     @ObservedObject var appState: AppState
+    @State private var showingSettings = false
 
     var body: some View {
         VStack(spacing: 0) {
             header
+            content
+            footer
+        }
+        .frame(minWidth: 420, minHeight: 520)
+    }
+
+    private var header: some View {
+        HStack {
+            Text("Reservoir")
+                .font(.system(size: 18, weight: .semibold))
+            Spacer()
+            if !showingSettings {
+                Button {
+                    appState.refreshNow()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .help("Refresh")
+                .disabled(appState.isRefreshing)
+            }
+            Button {
+                showingSettings.toggle()
+            } label: {
+                Image(systemName: showingSettings ? "xmark" : "gearshape")
+            }
+            .help(showingSettings ? "Close settings" : "Settings")
+        }
+        .padding(16)
+        .background(Color(nsColor: .windowBackgroundColor))
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        if showingSettings {
+            ScrollView {
+                SettingsView(appState: appState)
+                    .padding(16)
+            }
+        } else {
             ScrollView {
                 VStack(spacing: 12) {
                     ForEach(appState.providers) { provider in
@@ -19,26 +59,7 @@ struct DashboardView: View {
                 }
                 .padding(16)
             }
-            footer
         }
-        .frame(minWidth: 420, minHeight: 520)
-    }
-
-    private var header: some View {
-        HStack {
-            Text("Reservoir")
-                .font(.system(size: 18, weight: .semibold))
-            Spacer()
-            Button {
-                appState.refreshNow()
-            } label: {
-                Image(systemName: "arrow.clockwise")
-            }
-            .help("Refresh")
-            .disabled(appState.isRefreshing)
-        }
-        .padding(16)
-        .background(Color(nsColor: .windowBackgroundColor))
     }
 
     private var footer: some View {
@@ -47,8 +68,8 @@ struct DashboardView: View {
                 appState.clearCachedUsage()
             }
             Spacer()
-            Button("Privacy") {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            Button(showingSettings ? "Usage" : "Settings") {
+                showingSettings.toggle()
             }
             Button("Quit") {
                 NSApp.terminate(nil)
@@ -191,7 +212,7 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Privacy")
+            Text("Settings")
                 .font(.title2.bold())
             Text("Reservoir stores only normalized local snapshots. It does not use API keys, telemetry, remote logging, or third-party network libraries.")
                 .foregroundStyle(.secondary)
@@ -223,8 +244,6 @@ struct SettingsView: View {
                 }
             }
         }
-        .padding(24)
-        .frame(width: 520)
     }
 }
 
